@@ -1,6 +1,7 @@
+from logging import log
 from os import path, mkdir
 from os.path import join, dirname
-from datatime import datetime as dt
+import datetime as dt
 from utils.webcam import webcamera # Custom Function to handle webcam.
 import multiprocessing
 import socketserver
@@ -40,24 +41,24 @@ def main():
     PROCESSES = [ socket_connection_handler, camera_connection_handler ]
     # Start processes
     for process in PROCESSES:
+        print("starting processes")
         process.start()
     # Loop forever
-    while run_program:
-        if KeyboardInterrupt:
-            for process in PROCESSES:
-                process.terminate()
-            run_program = False
+    while run_program is True:
         pass
-    print("Terminating program...")
-    return
-
+    # terminate processes
+    for process in PROCESSES:
+        process.terminate()
+        log("Terminated processes.", "Standard", "Standard", "logs")    
+    run_program = False
+        
 
 if __name__ == '__main__':
     print("launching application...")
     run_program = True
-    while run_program:
-        try:
-            main()
-        except:
-            print("Error...")
+    try:
+        main()
+    except:
+        print("Error...")
     print("Program terminated...")
+
